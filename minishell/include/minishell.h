@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:21 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/31 14:25:40 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/01 17:13:23 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <readline/readline.h>
 #include "../libft/libft.h"
 #include "built_in.h"
+#include "parse.h"
 
 // -------------------------------- MACROS ---------------------------------- //
 
@@ -34,4 +36,5 @@ typedef struct s_env
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 
+t_env	*get_env(char **env);
 #endif

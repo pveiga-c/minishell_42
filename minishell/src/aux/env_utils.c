@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:08:25 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/31 14:08:51 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/01 17:12:05 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../include/minishell.h"
 
 /* Esta funcao retorno o ultimo elemento de uma lista do tipo t_env */
 t_env	*ft_envlast(t_env *lst)
@@ -47,7 +47,7 @@ t_env	*ft_envnew(char *str)
 	new = (t_env *)ft_calloc(sizeof(t_env), 1);
 	if (!new)
 		return (NULL);
-	new->content = str;
+	new->data = str;
 	return (new);
 }
 
@@ -59,7 +59,7 @@ int	ft_free_env(t_env **lst)
 	while (*lst)
 	{
 		temp = (*lst)->next;
-		free((*lst)->content);
+		free((*lst)->data);
 		free(*lst);
 		*lst = temp;
 	}

@@ -1,0 +1,83 @@
+Os operadores de redirecionamento de shell são usados para redirecionar a entrada, saída e erros de um 
+comando para um arquivo ou para outro comando.
+
+Os operadores de redirecionamento de shell são os seguintes:
+
+    < - Redireciona a entrada de um comando para um arquivo.
+    > - Redireciona a saída de um comando para um arquivo.
+    << - Redireciona a entrada de um comando para um conjunto de dados fornecidos pelo usuário.
+    >> - Redireciona a saída de um comando para um arquivo, adicionando a saída ao final do arquivo.
+    & - Executa um comando em segundo plano.
+    | - Conecta a saída de um comando à entrada de outro comando.
+
+<
+
+O operador < é usado para redirecionar a entrada de um comando para um arquivo. O arquivo especificado
+será aberto e sua entrada será fornecida ao comando. Se o arquivo não existir, ele será criado.
+
+Aqui está um exemplo de como usar o operador < para redirecionar a entrada de um comando para um arquivo:
+
+cat < input.txt
+
+Este comando irá exibir o conteúdo do arquivo input.txt na tela.
+
+>
+
+O operador > é usado para redirecionar a saída de um comando para um arquivo. A saída do comando será 
+escrita no arquivo especificado. Se o arquivo não existir, ele será criado.
+
+Aqui está um exemplo de como usar o operador > para redirecionar a saída de um comando para um arquivo:
+
+ls > output.txt
+
+Este comando irá listar o conteúdo do diretório atual e a saída será escrita no arquivo output.txt.
+
+<<
+
+O operador << é usado para redirecionar a entrada de um comando para um conjunto de dados fornecidos 
+pelo usuário. O usuário fornecerá a entrada no prompt do shell.
+
+Aqui está um exemplo de como usar o operador << para redirecionar a entrada de um comando para um 
+conjunto de dados fornecidos pelo usuário:
+
+wc << EOF
+12345
+67890
+EOF
+
+Este comando irá contar o número de linhas, palavras e caracteres nos números fornecidos pelo usuário.
+
+>>
+
+O operador >> é usado para redirecionar a saída de um comando para um arquivo, adicionando a saída ao 
+final do arquivo. Se o arquivo não existir, ele será criado.
+
+Aqui está um exemplo de como usar o operador >> para redirecionar a saída de um comando para um arquivo:
+
+echo "Hello, world!" >> output.txt
+
+Este comando irá adicionar a mensagem "Hello, world!" ao final do arquivo output.txt.
+
+&
+
+O operador & é usado para executar um comando em segundo plano. O comando será executado em segundo 
+plano e o prompt do shell retornará imediatamente.
+
+Aqui está um exemplo de como usar o operador & para executar um comando em segundo plano:
+
+ls &
+
+Este comando irá listar o conteúdo do diretório atual em segundo plano.
+
+|
+
+O operador | é usado para conectar a saída de um comando à entrada de outro comando. A saída do primeiro 
+comando será fornecida como entrada para o segundo comando.
+
+Aqui está um exemplo de como usar o operador | para conectar a saída de um comando à entrada de outro 
+comando:
+
+ls | grep ".txt"
+
+Este comando irá listar o conteúdo do diretório atual e o comando grep irá procurar arquivos com
+ extensão .txt.

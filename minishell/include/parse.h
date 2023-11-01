@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 13:41:02 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/01 17:14:04 by pveiga-c         ###   ########.fr       */
+/*   Created: 2023/11/01 14:05:24 by pveiga-c          #+#    #+#             */
+/*   Updated: 2023/11/01 16:15:00 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#ifndef PARSE_H
+# define PARSE_H
 
-/* Cria a linked list do tipo t_env
-com todas as variaveis ambiente*/
-// t_env	*get_env(char **env)
-// {
-// 	int		i;
-// 	t_env	*res;
+typedef struct s_prompt
+{
+	int n_tokens;
+	int n_pipes;
+}	t_prompt;
 
-// 	i = -1;
-// 	res = NULL;
-// 	while (env[++i])
-// 		env_add_back(&res, env_new(ft_strdup(env[i])));
-// 	return (res);
-// }
+void parse(char *p_input);
+
+
+#endif

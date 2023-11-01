@@ -6,14 +6,14 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:08:25 by pviegas           #+#    #+#             */
-/*   Updated: 2023/10/31 14:08:51 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/01 16:56:58 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../include/minishell.h"
 
-/* Esta funcao retorno o ultimo elemento de uma lista do tipo t_env */
-t_env	*ft_envlast(t_env *lst)
+/* Retorna o ultimo elemento */
+t_env	*env_last(t_env *lst)
 {
 	while (lst)
 	{
@@ -24,50 +24,50 @@ t_env	*ft_envlast(t_env *lst)
 	return (lst);
 }
 
-/* Adiciona um novo elemento a uma lista t_env */
-void	ft_envadd_back(t_env **lst, t_env *new)
+/* Adiciona um novo elemento */
+void	env_add_back(t_env **lst, t_env *new)
 {
 	if (lst)
 	{
 		if (*lst)
 		{
-			new->prev = ft_envlast(*lst);
-			ft_envlast(*lst)->next = new;
+			new->prev = env_last(*lst);
+			env_last(*lst)->next = new;
 		}
 		else
 			*lst = new;
 	}
 }
 
-/* Cria um novo node para uma lista do tipo t_env */
-t_env	*ft_envnew(char *str)
+/* Cria um novo node */
+t_env	*env_new(char *str)
 {
 	t_env	*new;
 
 	new = (t_env *)ft_calloc(sizeof(t_env), 1);
 	if (!new)
 		return (NULL);
-	new->content = str;
+	new->data = str;
 	return (new);
 }
 
-/* Liberta toda a memoria de uma lista do tipo do t_env */
-int	ft_free_env(t_env **lst)
+/* Liberta toda a memoria */
+int	free_env(t_env **lst)
 {
 	t_env	*temp;
 
 	while (*lst)
 	{
 		temp = (*lst)->next;
-		free((*lst)->content);
+		free((*lst)->data);
 		free(*lst);
 		*lst = temp;
 	}
 	return (1);
 }
 
-/* Esta funcao faz o ponteiro da lista voltar a apontar para a cabeca */
-void	env_go_head(t_env **lst)
+/* Retorna o primeiro elemento */
+void	env_first(t_env **lst)
 {
 	while ((lst) && (*lst) && (*lst)->prev)
 		(*lst) = (*lst)->prev;

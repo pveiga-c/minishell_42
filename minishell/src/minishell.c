@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   MiniShell.c                                        :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/01 16:18:20 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:32:09 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,13 @@ int	main(int argc, char **argv, char **env)
 	
 	prompt = argv[1];
 	(void)argc;
+	(void)env;
+	rl_catch_signals = 0;
 	// if (argc != 1)
 	// 	return (1);
-	(void)env;
 //	desativa a captura de sinais pelo readline 
-	rl_catch_signals = 0;
 	// while(1)
 	// {
-		
-	// 
 	parse(prompt);
 //	g_data.env = get_env(env);
 //	g_data.status = 0;

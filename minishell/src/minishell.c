@@ -6,7 +6,7 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/02 16:32:09 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/03 15:27:58 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,28 @@
 
 int	main(int argc, char **argv, char **env)
 {
-	// (void)argv;
 	char *prompt;
+	t_prompt parse;
 	
+	init_param(&parse);
 	prompt = argv[1];
 	(void)argc;
 	(void)env;
 	rl_catch_signals = 0;
-	// if (argc != 1)
-	// 	return (1);
-//	desativa a captura de sinais pelo readline 
-	// while(1)
-	// {
-	parse(prompt);
-//	g_data.env = get_env(env);
-//	g_data.status = 0;
-//	g_data.hd = 0;
-//	g_data.vars = init_vars();
-//	rl_catch_signals = 0;
-//	signals_default();
-//	prompt();
+
+	start_parse(&parse ,prompt);
+}
+
+void	init_param(t_prompt *parse)
+{
+	t_listm *tokens;
+
+	tokens = ft_calloc(1, sizeof(t_listm));
+	
+	parse->n_tokens = 0;
+	tokens->content = NULL;
+	tokens->opera = NULL;
+	tokens->id = 0; 
 }
 /*
 int main()

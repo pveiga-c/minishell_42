@@ -6,7 +6,7 @@
 #    By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/01 12:00:51 by pviegas           #+#    #+#              #
-#    Updated: 2023/11/01 17:23:49 by pviegas          ###   ########.fr        #
+#    Updated: 2023/11/06 16:52:46 by pviegas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,8 +29,12 @@ READFLAGS	= -lreadline
 
 # Paths
 SRC_DIR 			= src/
-SRC_FILES			= 	minishell.c \
-						aux/env_utils.c \
+SRC_FILES			= 	executor.c \
+						path.c \
+						aux/free.c \
+						aux/env_utils1.c \
+						aux/env_utils2.c \
+						aux/lst_utils1.c \
 						built_in/env.c 
 OBJ_DIR				= obj/
 

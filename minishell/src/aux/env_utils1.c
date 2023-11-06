@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_utils.c                                        :+:      :+:    :+:   */
+/*   env_utils1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:08:25 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/01 16:56:58 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/06 15:57:54 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_env	*env_last(t_env *lst)
 	return (lst);
 }
 
-/* Adiciona um novo elemento */
+/* Adiciona um novo elemento no final*/
 void	env_add_back(t_env **lst, t_env *new)
 {
 	if (lst)
@@ -59,7 +59,7 @@ int	free_env(t_env **lst)
 	while (*lst)
 	{
 		temp = (*lst)->next;
-		free((*lst)->data);
+//		free((*lst)->data);
 		free(*lst);
 		*lst = temp;
 	}

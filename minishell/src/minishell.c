@@ -6,13 +6,13 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/02 14:53:02 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/06 12:36:25 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// struct s_global	g_data;
+struct s_global g_data;
 
 int	main(int argc, char **argv, char **env)
 {
@@ -26,13 +26,6 @@ int	main(int argc, char **argv, char **env)
 //	desativa a captura de sinais pelo readline 
 	rl_catch_signals = 0;
 	
-	printf("ENV:\n\n");
-	env_list = get_env(env);
-	while(env_list)
-	{
-		printf("%s\n", env_list->data);
-		env_list = env_list->next;
-	}
 //	g_data.env = get_env(env);
 //	g_data.status = 0;
 //	g_data.hd = 0;

@@ -6,13 +6,16 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/03 15:27:58 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/06 16:24:39 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
 // struct s_global	g_data;
+#include <readline/readline.h>
+# include <readline/history.h>
+
 
 int	main(int argc, char **argv, char **env)
 {
@@ -24,7 +27,8 @@ int	main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)env;
 	rl_catch_signals = 0;
-
+	// prompt = readline("$ ");
+	// add_history(prompt);
 	start_parse(&parse ,prompt);
 }
 

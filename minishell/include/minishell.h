@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:21 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/06 16:52:18 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/07 14:37:15 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_commands
 
 typedef struct s_vars
 {
-	t_list			*head;
+	t_commands			*head;
 	char			*str;
 	char			**env;
 	char			**division;
@@ -83,6 +83,14 @@ void		lst_add_back(t_commands **lst, t_commands *new);
 char		*get_cmd_path(char **env, char **cmd);
 char		*search_env(char **env, char *str);
 int			search_number(char *s1, char *s2);
-void		free_matrix(char ***m);
+void		free_str_array(char ***str_array);
+void		choose_execution(t_commands *command);
+void		command_execution(t_commands *command);
+int			is_built_in(t_commands *command);
+int			lst_size(t_commands *lst);
+int			free_vars(void);
+void		free_list(t_commands **lst);
+void		lst_first(t_commands **lst);
+void		execute_env(t_commands **command);
 
 #endif

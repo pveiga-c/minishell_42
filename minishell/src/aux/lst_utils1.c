@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:05:40 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/06 15:45:11 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/07 14:08:14 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ char	**lst_to_arr(t_env *lst_env)
 	int		i;
 
 	size = env_lst_size(lst_env);
-	printf("env_size: %d\n", size);
 	arr = (char **)malloc((size + 1) * sizeof(char *));
 	if (!arr)
 		return (NULL);
@@ -87,3 +86,19 @@ void	lst_add_back(t_commands **lst, t_commands *new)
 		}
 	}
 }
+
+int	lst_size(t_commands *lst)
+{
+	int			count;
+	t_commands	*node;
+
+	count = 0;
+	node = lst;
+	while (node != NULL)
+	{
+		count++;
+		node = node->next;
+	}
+	return (count);
+}
+

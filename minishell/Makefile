@@ -6,7 +6,7 @@
 #    By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/01 12:00:51 by pviegas           #+#    #+#              #
-#    Updated: 2023/11/06 16:52:46 by pviegas          ###   ########.fr        #
+#    Updated: 2023/11/07 14:26:01 by pviegas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,10 +31,12 @@ READFLAGS	= -lreadline
 SRC_DIR 			= src/
 SRC_FILES			= 	executor.c \
 						path.c \
+						built_in.c \
 						aux/free.c \
 						aux/env_utils1.c \
 						aux/env_utils2.c \
 						aux/lst_utils1.c \
+						aux/lst_utils2.c \
 						built_in/env.c 
 OBJ_DIR				= obj/
 

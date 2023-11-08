@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   built_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/14 13:50:03 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/07 14:07:08 by pviegas          ###   ########.fr       */
+/*   Created: 2023/11/07 13:59:31 by pviegas           #+#    #+#             */
+/*   Updated: 2023/11/07 14:15:47 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/minishell.h"
 
-int	ft_lstsize(t_list *lst)
+int	is_built_in(t_commands *command)
 {
-	int		count;
-	t_list	*node;
-
-	count = 0;
-	node = lst;
-	while (node != NULL)
-	{
-		count++;
-		node = node->next;
-	}
-	return (count);
+	if (!ft_strncmp(command->content[0], "pwd", 3) || \
+		!ft_strncmp(command->content[0], "cd", 2) || \
+		!ft_strncmp(command->content[0], "exit", 4) || \
+		!ft_strncmp(command->content[0], "env", 3) || \
+		!ft_strncmp(command->content[0], "export", 6) || \
+		!ft_strncmp(command->content[0], "unset", 5))
+		return (1);
+	else
+		return (0);
 }

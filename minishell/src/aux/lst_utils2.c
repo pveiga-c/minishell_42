@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   lst_utils2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/14 13:50:03 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/07 14:07:08 by pviegas          ###   ########.fr       */
+/*   Created: 2023/11/07 14:20:37 by pviegas           #+#    #+#             */
+/*   Updated: 2023/11/07 14:31:10 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../include/minishell.h"
 
-int	ft_lstsize(t_list *lst)
+// Coloca o ponteiro no node inicial
+void	lst_first(t_commands **lst)
 {
-	int		count;
-	t_list	*node;
-
-	count = 0;
-	node = lst;
-	while (node != NULL)
-	{
-		count++;
-		node = node->next;
-	}
-	return (count);
+	while ((lst) && (*lst) && (*lst)->prev)
+		(*lst) = (*lst)->prev;
 }

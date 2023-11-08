@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 15:35:04 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/06 16:54:20 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/07 15:06:36 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,47 +23,47 @@ int	main(int argc, char **argv, char **env)
 
 	g_data.env = get_env(env);
 
-	// Uso da função lst_add_back para adicionar comandos à lista
-	t_commands *commands = NULL; // Inicializa a lista como vazia
+	// Exemplo de uso da função lst_add_back para adicionar comandos à lista
+	t_commands *commands = NULL; // Inicialize sua lista como vazia
 
 	// Cria um novo elemento t_commands
 	t_commands *novo_comando = (t_commands *)malloc(sizeof(t_commands));
-	novo_comando->content = (char *[]){"sleep", "5", NULL}; // Exemplo de comando
-	novo_comando->path = "/bin/sleep"; // Exemplo de caminho
-	novo_comando->fd[0] = 0; // Exemplo de descritor de arquivo de entrada
-	novo_comando->fd[1] = 1; // Exemplo de descritor de arquivo de saída
-	novo_comando->fd_master[0] = 2; // Exemplo de descritor de arquivo de erro
-	novo_comando->fd_master[1] = 3; // Exemplo de descritor de arquivo de erro
+	novo_comando->content = (char *[]){"env", NULL};
+	novo_comando->path = "/bin/sleep";
+	novo_comando->fd_master[0] = 2;
+	novo_comando->fd_master[1] = 3;
+	novo_comando->fd[0] = 0;
+	novo_comando->fd[1] = 1;
+	novo_comando->fd_master_error[0] = 0;
+	novo_comando->fd_master_error[1] = 0;
 	novo_comando->next = NULL;
 	novo_comando->prev = NULL;
-	novo_comando->ft_exec = NULL; // Defina sua função de execução, se necessário
+	novo_comando->ft_exec = NULL;
 
 	// Adicione o novo elemento à lista
 	lst_add_back(&commands, novo_comando);
-	free(novo_comando);
-
-	// Você pode repetir o processo para adicionar mais comandos à lista
-
+/*
 	// Exemplo de outro comando
 	t_commands *outro_comando = (t_commands *)malloc(sizeof(t_commands));
 	outro_comando->content = (char *[]){"ls", "-al", NULL};
 	outro_comando->path = "/bin/ls";
-	outro_comando->fd[0] = 4;
-	outro_comando->fd[1] = 5;
 	outro_comando->fd_master[0] = 6;
 	outro_comando->fd_master[1] = 7;
+	outro_comando->fd[0] = 4;
+	outro_comando->fd[1] = 5;
+	outro_comando->fd_master_error[0] = 0;
+	outro_comando->fd_master_error[1] = 0;
 	outro_comando->next = NULL;
 	outro_comando->prev = NULL;
 	outro_comando->ft_exec = NULL;
 
-	// Adicione o segundo elemento à lista
 	lst_add_back(&commands, outro_comando);
-	free(outro_comando);
+*/
 
-	// Exemplo de impressão da lista
-	printf("\nCOMMANDS: \n");
-	print_lst(commands);
 	executor(commands);
+
+	free(novo_comando);
+//	free(outro_comando);
 
 	free_env(&g_data.env);
 	return (0);
@@ -71,18 +71,6 @@ int	main(int argc, char **argv, char **env)
 
 void	executor(t_commands *command)
 {
-//	int		status;
-//	pid_t	proc_id;
-	int	i;
-
-	char	**env_vars;
-	env_vars = lst_to_arr(g_data.env);
-	i = 0;
-	while (env_vars[i])
-	{
-		printf("env_vars:  %s\n", env_vars[i++]);
-	}
-	
 	execution(command);
 /*
 	go_head(&command);
@@ -101,13 +89,16 @@ void	executor(t_commands *command)
 	if (check_fds(command))
 		g_data.status = 1;
 */
-	free(env_vars);
 }
 
 void	execution(t_commands *command)
 {
 	// guarda as variaveis de ambiente
 	char	**env_vars;
+
+	// Exemplo de impressão da lista
+	printf("\nCOMMANDS: \n");
+	print_lst(command);
 
 	command->path = NULL;
 	while (command)
@@ -116,15 +107,74 @@ void	execution(t_commands *command)
 		{
 			env_vars = lst_to_arr(g_data.env);
 			command->path = get_cmd_path(env_vars, command->content);
-			printf("\n\nPATH: %s\n", command->path);
-			free_matrix(&env_vars);
-/*
-			define_exec(command);
+			printf("PATH: %s\n", command->path);
+//			free_str_array(&env_vars);
+			free(env_vars);
+			choose_execution(command);
 			command_execution(command);
-*/			
 		}
 		if (!command->next)
 			break ;
 		command = command->next;
 	}
+}
+
+/* Define a funcao de a executar para cada node */
+void	choose_execution(t_commands *command)
+{
+	if (!ft_strncmp(command->content[0], "pwd", 3))
+//		command->ft_exec = execute_pwd;
+		printf("executar PWD\n\n");
+	else if (!ft_strncmp(command->content[0], "cd", 2))
+//		command->ft_exec = execute_cd;
+		printf("executar CD\n\n");
+	else if (!ft_strncmp(command->content[0], "echo", 4))
+//		command->ft_exec = execute_echo;
+		printf("executar ECHO\n\n");
+	else if (!ft_strncmp(command->content[0], "env", 3))
+		command->ft_exec = execute_env;
+//		printf("executar ENV\n\n");
+	else if (!ft_strncmp(command->content[0], "exit", 4))
+//		command->ft_exec = execute_exit;
+		printf("executar EXIT\n\n");
+	else if (!ft_strncmp(command->content[0], "export", 6))		
+//		command->ft_exec = execute_export;
+		printf("executar EXPORT\n\n");
+	else if (!ft_strncmp(command->content[0], "unset", 5))
+//		command->ft_exec = execute_unset;
+		printf("executar UNSET\n\n");
+	else
+//		command->ft_exec = execute_default;
+		printf("executar DEFAULT\n\n");
+}
+
+void	command_execution(t_commands *command)
+{
+	if (is_built_in(command) && (lst_size(command) == 1))
+	{
+		command->ft_exec(&command);
+		if (command->content && (!ft_strncmp(command->content[0], "exit", 5)) && \
+		free_env(&g_data.env) && free_vars() && write(2, "exit\n", 5))
+			exit(g_data.status);
+		return ;
+	}
+/*
+	if (fork() == 0)
+	{
+		if (command->prev && command->fd_master[0] < 3)
+			dup2(command->fd[0], 0);
+		else if (command->fd_master[0] > 2)
+			dup2(command->fd_master[0], 0);
+		if (command->next && command->fd_master[1] < 3)
+			dup2(command->next->fd[1], 1);
+		else if (command->fd_master[1] > 2)
+			dup2(command->fd_master[1], 1);
+		command->ft_exec(&command);
+		ft_free_env(&g_data.env);
+		free_vars();
+		close(0);
+		exit(g_data.status);
+	}
+	close_fds(&command, 0);
+*/	
 }

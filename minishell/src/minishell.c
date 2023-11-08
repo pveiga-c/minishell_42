@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/06 12:36:25 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/08 15:58:23 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int argc, char **argv, char **env)
 	rl_catch_signals = 0;
 	
 //	g_data.env = get_env(env);
-//	g_data.status = 0;
+//	g_data.exit_status = 0;
 //	g_data.hd = 0;
 //	g_data.vars = init_vars();
 //	rl_catch_signals = 0;

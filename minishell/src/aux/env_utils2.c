@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 12:17:19 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/06 16:27:09 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/08 15:58:23 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*search_env(char **env, char *str)
 		ft_strncmp(env[i], str, search_number(env[i], str)))
 		i++;
 	if (*str == '?')
-		return (ft_itoa(g_data.status));
+		return (ft_itoa(g_data.exit_status));
 	if (!env[i] || !str || !*str)
 		return ("");
 	temp = (env[i] + ft_strlen(str));

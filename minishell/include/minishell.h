@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:21 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/07 14:37:15 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/08 15:59:42 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 
 // ------------------------------- INCLUDES --------------------------------- //
 
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
+#include <limits.h>
+
 #include "../libft/libft.h"
 #include "built_in.h"
 //#include "aux.h"
@@ -56,7 +59,7 @@ typedef struct s_env
 struct s_global
 {
 	t_vars			*vars;
-	int				status;
+	int				exit_status;
 	t_env			*env;
 	int				hd;
 	int				interrupted;
@@ -92,5 +95,9 @@ int			free_vars(void);
 void		free_list(t_commands **lst);
 void		lst_first(t_commands **lst);
 void		execute_env(t_commands **command);
+void		execute_pwd(t_commands **command);
+int			ft_isspace(int c);
+void		execute_echo(t_commands **command);
+void		execute_exit(t_commands **command);
 
 #endif

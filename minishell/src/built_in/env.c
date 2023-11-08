@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:41:02 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/07 15:08:29 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/08 15:58:23 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	execute_env(t_commands **command)
 		write(2, "env: '", 6);
 		write(2, (*command)->content[1], ft_strlen((*command)->content[1]));
 		write(2, "': No such file or directory\n", 29);
-		g_data.status = 127;
+		g_data.exit_status = 127;
 		return ;
 	}
 	while (g_data.env && g_data.env->data)
@@ -45,6 +45,6 @@ void	execute_env(t_commands **command)
 		g_data.env = g_data.env->next;
 	}
 	env_first(&g_data.env);
-	g_data.status = 0;
+	g_data.exit_status = 0;
 }
 

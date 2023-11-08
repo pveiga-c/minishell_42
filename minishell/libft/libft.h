@@ -71,6 +71,7 @@ void	ft_puthexh_ct(unsigned int num, size_t *counter);
 void	ft_puthexl_ct(unsigned int num, size_t *counter);
 void	ft_putuint_ct(unsigned int num, size_t *counter);
 char	*ft_base_conv(unsigned long long n, char *base);
+int		ft_atoi(const char *str);
 
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_front(t_list **lst, t_list *new);

@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 15:35:04 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/07 15:06:36 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/08 16:31:17 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv, char **env)
 
 	// Cria um novo elemento t_commands
 	t_commands *novo_comando = (t_commands *)malloc(sizeof(t_commands));
-	novo_comando->content = (char *[]){"env", NULL};
+	novo_comando->content = (char *[]){"exit", "-9223372036854775808", "paulo viegas", "fernandes" , NULL};
 	novo_comando->path = "/bin/sleep";
 	novo_comando->fd_master[0] = 2;
 	novo_comando->fd_master[1] = 3;
@@ -80,14 +80,14 @@ void	executor(t_commands *command)
 		{
 			proc_id = waitpid(-1, &status, 0);
 			if (proc_id != -1 && WIFEXITED(status))
-				g_data.status = WEXITSTATUS(status);
+				g_data.exit_status = WEXITSTATUS(status);
 		}
 		if (!command->next)
 			break ;
 		command = command->next;
 	}
 	if (check_fds(command))
-		g_data.status = 1;
+		g_data.exit_status = 1;
 */
 }
 
@@ -123,20 +123,17 @@ void	execution(t_commands *command)
 void	choose_execution(t_commands *command)
 {
 	if (!ft_strncmp(command->content[0], "pwd", 3))
-//		command->ft_exec = execute_pwd;
-		printf("executar PWD\n\n");
+		command->ft_exec = execute_pwd;
 	else if (!ft_strncmp(command->content[0], "cd", 2))
 //		command->ft_exec = execute_cd;
 		printf("executar CD\n\n");
 	else if (!ft_strncmp(command->content[0], "echo", 4))
-//		command->ft_exec = execute_echo;
-		printf("executar ECHO\n\n");
+		command->ft_exec = execute_echo;
 	else if (!ft_strncmp(command->content[0], "env", 3))
 		command->ft_exec = execute_env;
-//		printf("executar ENV\n\n");
 	else if (!ft_strncmp(command->content[0], "exit", 4))
-//		command->ft_exec = execute_exit;
-		printf("executar EXIT\n\n");
+		command->ft_exec = execute_exit;
+//		printf("executar EXIT\n\n");
 	else if (!ft_strncmp(command->content[0], "export", 6))		
 //		command->ft_exec = execute_export;
 		printf("executar EXPORT\n\n");
@@ -155,26 +152,7 @@ void	command_execution(t_commands *command)
 		command->ft_exec(&command);
 		if (command->content && (!ft_strncmp(command->content[0], "exit", 5)) && \
 		free_env(&g_data.env) && free_vars() && write(2, "exit\n", 5))
-			exit(g_data.status);
+			exit(g_data.exit_status);
 		return ;
 	}
-/*
-	if (fork() == 0)
-	{
-		if (command->prev && command->fd_master[0] < 3)
-			dup2(command->fd[0], 0);
-		else if (command->fd_master[0] > 2)
-			dup2(command->fd_master[0], 0);
-		if (command->next && command->fd_master[1] < 3)
-			dup2(command->next->fd[1], 1);
-		else if (command->fd_master[1] > 2)
-			dup2(command->fd_master[1], 1);
-		command->ft_exec(&command);
-		ft_free_env(&g_data.env);
-		free_vars();
-		close(0);
-		exit(g_data.status);
-	}
-	close_fds(&command, 0);
-*/	
 }

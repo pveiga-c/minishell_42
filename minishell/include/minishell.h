@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:21 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/08 15:59:42 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/09 15:48:31 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <limits.h>
+#include <fcntl.h>
 
 #include "../libft/libft.h"
 #include "built_in.h"
@@ -84,7 +85,7 @@ int			env_lst_size(t_env *lst);
 t_commands	*lst_last(t_commands *lst);
 void		lst_add_back(t_commands **lst, t_commands *new);
 char		*get_cmd_path(char **env, char **cmd);
-char		*search_env(char **env, char *str);
+char		*env_search_str(char **env, char *str);
 int			search_number(char *s1, char *s2);
 void		free_str_array(char ***str_array);
 void		choose_execution(t_commands *command);
@@ -99,5 +100,12 @@ void		execute_pwd(t_commands **command);
 int			ft_isspace(int c);
 void		execute_echo(t_commands **command);
 void		execute_exit(t_commands **command);
+void		stderr_null(void);
+void		execute_export(t_commands **command);
+void		sort_array(char **arr, int size);
+int			str_cmp(char *s1, char *s2);
+int			strlen_array(char **array);
+void		execute_unset(t_commands **command);
+t_env		*env_search(char *input_var);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 16:29:07 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/07 14:31:39 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/09 15:34:22 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,19 @@ void	free_list(t_commands **lst)
 		*lst = aux;
 	}
 	g_data.vars->head = NULL;
+}
+
+// Liberta a memoria da linked list que guarda as variaveis de ambiente
+int	free_env(t_env **lst)
+{
+	t_env	*temp;
+
+	while (*lst)
+	{
+		temp = (*lst)->next;
+//		free((*lst)->data);
+		free(*lst);
+		*lst = temp;
+	}
+	return (1);
 }

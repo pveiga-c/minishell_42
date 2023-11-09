@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:08:25 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/06 15:57:54 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/09 15:39:28 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,6 @@ t_env	*env_new(char *str)
 		return (NULL);
 	new->data = str;
 	return (new);
-}
-
-/* Liberta toda a memoria */
-int	free_env(t_env **lst)
-{
-	t_env	*temp;
-
-	while (*lst)
-	{
-		temp = (*lst)->next;
-//		free((*lst)->data);
-		free(*lst);
-		*lst = temp;
-	}
-	return (1);
 }
 
 /* Retorna o primeiro elemento */

@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 10:54:08 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/07 15:14:50 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/09 15:42:20 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_cmd_path(char **env, char **cmd)
 	path = NULL;
 	if (strchr(cmd[0], '/'))
 		return (ft_strdup(cmd[0]));
-	dir = search_env(env, "PATH");
+	dir = env_search_str(env, "PATH");
 	i = 0;
 	while (dir[i])
 	{

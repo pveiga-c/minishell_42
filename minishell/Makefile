@@ -6,7 +6,7 @@
 #    By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/01 12:00:51 by pviegas           #+#    #+#              #
-#    Updated: 2023/11/08 15:40:39 by pviegas          ###   ########.fr        #
+#    Updated: 2023/11/09 16:42:19 by pviegas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,9 @@ SRC_FILES			= 	executor.c \
 						built_in/pwd.c \
 						built_in/echo.c \
 						built_in/env.c \
-						built_in/exit.c
+						built_in/exit.c \
+						built_in/export.c \
+						built_in/unset.c
 OBJ_DIR				= obj/
 
 LIBFT 		= libft/libft.a

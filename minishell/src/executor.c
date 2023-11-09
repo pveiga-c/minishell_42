@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 15:35:04 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/08 16:31:17 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/09 16:53:19 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv, char **env)
 
 	// Cria um novo elemento t_commands
 	t_commands *novo_comando = (t_commands *)malloc(sizeof(t_commands));
-	novo_comando->content = (char *[]){"exit", "-9223372036854775808", "paulo viegas", "fernandes" , NULL};
+	novo_comando->content = (char *[]){"export", NULL};
 	novo_comando->path = "/bin/sleep";
 	novo_comando->fd_master[0] = 2;
 	novo_comando->fd_master[1] = 3;
@@ -47,7 +47,7 @@ int	main(int argc, char **argv, char **env)
 	t_commands *outro_comando = (t_commands *)malloc(sizeof(t_commands));
 	outro_comando->content = (char *[]){"ls", "-al", NULL};
 	outro_comando->path = "/bin/ls";
-	outro_comando->fd_master[0] = 6;
+	outro_comando->fd_m	printf("entrei EXECUTE_UNSET");aster[0] = 6;
 	outro_comando->fd_master[1] = 7;
 	outro_comando->fd[0] = 4;
 	outro_comando->fd[1] = 5;
@@ -96,6 +96,7 @@ void	execution(t_commands *command)
 	// guarda as variaveis de ambiente
 	char	**env_vars;
 
+	// PFV
 	// Exemplo de impressão da lista
 	printf("\nCOMMANDS: \n");
 	print_lst(command);
@@ -108,6 +109,7 @@ void	execution(t_commands *command)
 			env_vars = lst_to_arr(g_data.env);
 			command->path = get_cmd_path(env_vars, command->content);
 			printf("PATH: %s\n", command->path);
+//			PFV
 //			free_str_array(&env_vars);
 			free(env_vars);
 			choose_execution(command);
@@ -133,13 +135,12 @@ void	choose_execution(t_commands *command)
 		command->ft_exec = execute_env;
 	else if (!ft_strncmp(command->content[0], "exit", 4))
 		command->ft_exec = execute_exit;
-//		printf("executar EXIT\n\n");
 	else if (!ft_strncmp(command->content[0], "export", 6))		
-//		command->ft_exec = execute_export;
-		printf("executar EXPORT\n\n");
+		command->ft_exec = execute_export;
+//		printf("executar EXPORT\n\n");
 	else if (!ft_strncmp(command->content[0], "unset", 5))
-//		command->ft_exec = execute_unset;
-		printf("executar UNSET\n\n");
+		command->ft_exec = execute_unset;
+//		printf("executar UNSET\n\n");
 	else
 //		command->ft_exec = execute_default;
 		printf("executar DEFAULT\n\n");

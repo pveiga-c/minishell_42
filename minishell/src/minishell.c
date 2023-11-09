@@ -6,7 +6,7 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/06 16:24:39 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/09 15:13:12 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	init_param(t_prompt *parse)
 	
 	parse->n_tokens = 0;
 	tokens->content = NULL;
-	tokens->opera = NULL;
 	tokens->id = 0; 
 }
 /*

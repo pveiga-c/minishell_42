@@ -6,7 +6,7 @@
 #    By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/01 12:00:51 by pviegas           #+#    #+#              #
-#    Updated: 2023/11/02 15:39:28 by pveiga-c         ###   ########.fr        #
+#    Updated: 2023/11/09 15:19:43 by pveiga-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,9 @@ SRC_DIR			= src/
 SRC_FILES		= 	minishell.c \
 					aux/env_utils.c \
 					built_in/env.c \
-					parse/parse.c
+					parse/parse.c \
+					parse/list.c \
+					parse/token.c 
 OBJ_DIR			= obj/
 
 

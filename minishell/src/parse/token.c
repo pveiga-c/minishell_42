@@ -6,7 +6,7 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 18:23:15 by pveiga-c          #+#    #+#             */
-/*   Updated: 2023/11/08 18:26:35 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/09 16:29:49 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ char **start_list(t_prompt *parse, char *p_input)
 				token[n][i++] = p_input[j++];
 			}
 		}
+		token[n][i] = '\0';
 		n++;
 	}
 	return (token);

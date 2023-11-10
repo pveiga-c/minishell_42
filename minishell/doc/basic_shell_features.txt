@@ -1,0 +1,171 @@
+1. Shell Syntax
+
+Quando o shell lê a entrada, ele executa uma sequência de operações. Se a entrada indicar o início de um 
+comentário, o shell ignora o símbolo de comentário ('#') e o restante dessa linha.
+
+Caso contrário, grosso modo, o shell lê sua entrada e a divide em palavras e operadores, empregando as 
+regras de cotação para selecionar quais significados atribuir às várias palavras e caracteres.
+
+O shell então analisa esses tokens em comandos e outras construções, remove o significado especial de 
+certas palavras ou caracteres, expande outros, redireciona a entrada e a saída conforme necessário, 
+executa o comando especificado, aguarda o status de saída do comando e disponibiliza esse status de 
+saída. para posterior inspeção ou processamento.
+
+1.1 Shell Operation
+
+A seguir está uma breve descrição da operação do shell quando ele lê e executa um comando. Basicamente, o 
+shell faz o seguinte:
+
+-> Lê sua entrada de um arquivo, de uma string fornecida como argumento para a opção de invocação -c ou do 
+	terminal do usuário.
+-> Divide a entrada em palavras e operadores, obedecendo às regras de cotação descritas em Citação. Esses 
+	tokens são separados por metacaracteres. A expansão do alias é realizada nesta etapa.
+-> Analisa os tokens em comandos simples e compostos.
+-> Executa as várias expansões de shell, dividindo os tokens expandidos em listas de nomes de arquivos 
+	e comandos e argumentos.
+-> Executa todos os redirecionamentos necessários e remove os operadores de redirecionamento e seus 
+	operandos da lista de argumentos.
+-> Executa o comando.
+-> Opcionalmente, aguarda a conclusão do comando e coleta seu status de saída.
+
+1.2 (Quoting) Citação
+
+A citação é usada para remover o significado especial de certos caracteres ou palavras do shell. 
+As aspas podem ser usadas para desabilitar o tratamento especial para caracteres especiais, para evitar 
+que palavras reservadas sejam reconhecidas como tal e para evitar a expansão de parâmetros.
+
+Cada um dos metacaracteres do shell tem um significado especial para o shell e deve ser colocado entre 
+aspas para representar a si mesmo. Quando os recursos de expansão do histórico de comando estão sendo 
+usados, o caractere de expansão do histórico, geralmente ‘!’, deve ser colocado entre aspas para evitar 
+a expansão do histórico. 
+Existem três mecanismos de cotação: o caractere de escape, aspas simples e aspas duplas.
+
+1.2.1 Escape Character
+
+Uma barra invertida ‘\’ sem aspas é o caractere de escape do Bash. Preserva o valor literal do próximo 
+caractere a seguir, com exceção da nova linha. Se um par \newline aparecer e a barra invertida em si não 
+estiver entre aspas, a \newline será tratada como uma continuação de linha (ou seja, será removida do 
+fluxo de entrada e efetivamente ignorada).
+
+1.2.2 Single Quotes
+
+Colocar caracteres entre aspas simples (''') preserva o valor literal de cada caractere entre aspas. 
+Uma aspa simples não pode ocorrer entre aspas simples, mesmo quando precedida por uma barra invertida.
+
+1.2.3 Double Quotes
+
+Colocar caracteres entre aspas duplas ('"') preserva o valor literal de todos os caracteres entre aspas, 
+com exceção de '$', '`', '\' e, quando a expansão do histórico está habilitada, '!'. Quando o shell está no
+modo POSIX,o '!' não tem nenhum significado especial entre aspas duplas, mesmo quando a expansão do 
+histórico está habilitada. Os caracteres '$' e '`' mantêm seu significado especial entre aspas duplas. 
+A barra invertida mantém seu significado especial somente quando seguida por um dos seguintes 
+caracteres: '$', '`', '"', '\' ou nova linha. Entre aspas duplas, as barras invertidas seguidas por um 
+desses caracteres são removidas. As barras invertidas que precedem os caracteres sem significado especial
+não são modificadas. Uma aspa dupla pode ser colocada entre aspas duplas, precedendo-a com uma barra 
+invertida. Se ativado, a expansão do histórico será executada, a menos que um ‘!’ que aparece entre aspas 
+duplas seja escapado por uma barra invertida. A barra invertida que precede o ‘!’ não é removida.
+
+Os parâmetros especiais ‘*’ e ‘@’ têm um significado especial quando estão entre aspas duplas.
+
+2.1 Lists of Commands
+
+Uma lista é uma sequência de um ou mais pipelines separados por um dos operadores ';', '&', '&&' ou '||' 
+e opcionalmente terminados por um de ';', '&' ou um nova linha.
+
+Destes operadores de lista, ‘&&’ e ‘||’ têm precedência igual, seguidos por ‘;’ e ‘&’, que têm precedência
+igual.
+
+Uma sequência de uma ou mais novas linhas pode aparecer em uma lista para delimitar comandos, equivalente 
+a um ponto e vírgula.
+
+Se um comando for finalizado pelo operador de controle ‘&’, o shell executa o comando de forma assíncrona 
+em um subshell. Isso é conhecido como execução do comando em segundo plano e são chamados de comandos 
+assíncronos. O shell não espera a conclusão do comando e o status de retorno é 0 (verdadeiro). Quando o 
+controle de trabalho não está ativo (consulte Controle de trabalho), a entrada padrão para comandos 
+assíncronos, na ausência de redirecionamentos explícitos, é redirecionada de /dev/null.
+
+Comandos separados por ‘;’ são executados sequencialmente; o shell espera que cada comando termine por sua 
+vez. O status de retorno é o status de saída do último comando executado.
+
+As listas AND e OR são sequências de um ou mais pipelines separados pelos operadores de controle ‘&&’ 
+e ‘||’, respectivamente. As listas AND e OR são executadas com associatividade à esquerda.
+
+Uma lista AND tem a forma
+
+command1 && command2
+
+command2 é executado se, e somente se, command1 retornar um status de saída zero (sucesso).
+
+Uma lista OR tem a forma
+
+command1 || command2
+
+command2 é executado se, e somente se, command1 retornar um status de saída diferente de zero.
+
+O status de retorno das listas AND e OR é o status de saída do último comando executado na lista.
+
+2.2 Compound Commands
+
+Comandos compostos são construções de linguagem de programação shell. Cada construção começa com uma 
+palavra reservada ou operador de controle e termina com uma palavra reservada ou operador correspondente. 
+Quaisquer redirecionamentos (consulte Redirecionamentos) associados a um comando composto se aplicam a 
+todos os comandos desse comando composto, a menos que sejam explicitamente substituídos.
+
+Na maioria dos casos, uma lista de comandos na descrição de um comando composto pode ser separada do resto
+do comando por uma ou mais novas linhas e pode ser seguida por uma nova linha no lugar de um ponto e vírgula.
+
+Bash fornece construções de loop, comandos condicionais e mecanismos para agrupar comandos e executá-los 
+como uma unidade.
+
+2.5.1 Construções de Loop
+
+Bash suporta as seguintes construções de loop.
+
+Observe que sempre que um ‘;’ aparecer na descrição da sintaxe de um comando, ele poderá ser substituído 
+por uma ou mais novas linhas.
+
+-> until
+
+A sintaxe do comando até é:
+
+    until test-commands; do consequent-commands; done
+
+Execute comandos consequentes desde que os comandos de teste tenham um status de saída diferente de zero. 
+O status de retorno é o status de saída do último comando executado em comandos consequentes, ou zero se 
+nenhum foi executado.
+
+-> while
+
+A sintaxe do comando while é:
+
+	while test-commands; do consequent-commands; done
+
+Execute comandos consequentes desde que os comandos de teste tenham um status de saída zero. O status de 
+retorno é o status de saída do último comando executado em comandos consequentes, ou zero se nenhum foi 
+executado.
+
+-> For
+
+A sintaxe do comando for é:
+
+    for name [ [in [words …] ] ; ] do commands; done
+
+Expanda as palavras e execute comandos uma vez para cada membro na lista  resultante, com o nome vinculado 
+ao membro atual. Se ‘in words’ não estiver presente, o comando for executa os comandos uma vez para cada 
+parâmetro posicional definido, como se ‘in "$@"’ tivesse sido especificado.
+
+O status de retorno é o status de saída do último comando executado. Se não houver itens na expansão das 
+palavras, nenhum comando será executado e o status de retorno será zero.
+
+Uma forma alternativa do comando for também é suportada:
+
+    for (( expr1 ; expr2 ; expr3 )) ; do commands ; done
+
+Primeiro, a expressão aritmética expr1 é avaliada de acordo com as regras descritas abaixo. A expressão 
+aritmética expr2 é então avaliada repetidamente até ser avaliada como zero. Cada vez que expr2 é avaliado 
+como um valor diferente de zero, comandos são executados e a expressão aritmética expr3 é avaliada. 
+Se alguma expressão for omitida, ela se comportará como se fosse avaliada como 1. O valor de retorno é o 
+status de saída do último comando executado ou falso se alguma das expressões for inválida.
+
+Os builtins break e continue podem ser usados para controlar a execução do loop.
+

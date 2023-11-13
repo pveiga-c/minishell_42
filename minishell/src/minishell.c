@@ -6,16 +6,11 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/09 16:36:49 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/13 15:51:35 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-// struct s_global	g_data;
-#include <readline/readline.h>
-# include <readline/history.h>
-
 
 int	main(int argc, char **argv, char **env)
 {
@@ -29,7 +24,7 @@ int	main(int argc, char **argv, char **env)
 	rl_catch_signals = 0;
 	//prompt = readline("$ ");
 	//add_history(prompt);
-	start_parse(&parse ,prompt);
+	start_parse_2(&parse ,prompt);
 }
 
 void	init_param(t_prompt *parse)
@@ -39,6 +34,9 @@ void	init_param(t_prompt *parse)
 	tokens = ft_calloc(1, sizeof(t_listm));
 	
 	parse->n_tokens = 0;
+	parse->n_pipes = 0;
+	parse->n_in_redir = 0;
+	parse->n_out_redir = 0;
 	tokens->content = NULL;
 	tokens->id = 0; 
 }

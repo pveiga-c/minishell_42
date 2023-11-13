@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:55:55 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/08 15:58:23 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/13 14:19:42 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ int	update_pwd_oldpwd(char *str)
 
 	if (getcwd(buf, sizeof(buf)) != NULL)
 	{
-		temp_env = env_lst_search(str);
+		temp_env = env_search(str);
 		if (temp_env)
 		{
-			free(temp_env->content);
+			free(temp_env->data);
 			temp_char = ft_strdup(buf);
 			temp_char_2 = ft_strjoin(str, "=");
-			temp_env->content = ft_strjoin(temp_char_2, temp_char);
+			temp_env->data = ft_strjoin(temp_char_2, temp_char);
 			free(temp_char_2);
 			free(temp_char);
 		}
@@ -61,36 +61,36 @@ int	change_dir(char *path)
 
 void	finish_cd(char **env_char)
 {
-	ft_free_matrix(&env_char);
+	free_str_array(&env_char);
 	g_data.exit_status = 0;
 	return ;
 }
 
 /* Esta funcao replica o comando cd apenas com path relativo ou absoluto.
    Existem os seguintes caos: "cd" ; "cd --" ; "cd -" ; "cd <algum caminho>" */
-void	__exec_cd(t_list **lst)
+void	execute_cd(t_commands **command)
 {
 	char	*path_home;
 	char	**env_char;
 
-	go_head(lst);
-	if (ft_matrixlen((*lst)->content) > 2)
+	lst_first(command);
+	if (strlen_array((*command)->content) > 2)
 	{
 		write(2, "minishell: cd: too many arguments\n", 34);
 		g_data.exit_status = 1;
 		return ;
 	}
-	env_char = ft_env_lst_to_arr(g_data.env);
-	path_home = search_env(env_char, "HOME");
-	if (!(*lst)->content[1] && change_dir(path_home))
+	env_char = lst_to_arr(g_data.env);
+	path_home = env_search_str(env_char, "HOME");
+	if (!(*command)->content[1] && change_dir(path_home))
 		return (finish_cd(env_char));
 	else
 	{
-		if (!ft_strcmp((*lst)->content[1], "--") && change_dir(path_home))
+		if (!ft_strcmp((*command)->content[1], "--") && change_dir(path_home))
 			return (finish_cd(env_char));
-		change_dir((*lst)->content[1]);
+		change_dir((*command)->content[1]);
 	}
-	ft_free_matrix(&env_char);
+	free_str_array(&env_char);
 	return ;
 }
 

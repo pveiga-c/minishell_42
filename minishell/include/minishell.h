@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:21 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/09 15:48:31 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/13 14:17:43 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,5 +107,7 @@ int			str_cmp(char *s1, char *s2);
 int			strlen_array(char **array);
 void		execute_unset(t_commands **command);
 t_env		*env_search(char *input_var);
+void		execute_cd(t_commands **lst);
+int			ft_strcmp(char *s1, char *s2);
 
 #endif

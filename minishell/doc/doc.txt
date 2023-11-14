@@ -1,0 +1,227 @@
+-> O que e o shell
+
+Como acabamos de dizer, somos solicitados a implementar nosso próprio shell, mas para 
+começar, o que é um shell? Se pensarmos (por exemplo) no Linux como uma noz ou uma concha, o 
+núcleo/semente é o núcleo da noz e deve ser cercado por uma capa ou casca. Da mesma forma, o 
+shell que estamos implementando funciona como um interpretador de comandos comunicando-se com 
+o kernel do sistema operacional de forma segura, e nos permite realizar uma série de tarefas 
+a partir de uma linha de comando, nomeadamente executar comandos, criar ou excluir arquivos 
+ou diretórios, ou ler e escrever conteúdo de arquivos, entre (muitas) outras coisas
+
+-> Nossa implementação do Minishell
+
+A ideia geral para este shell é ler uma sequência de comandos em um prompt usando readline.
+Antes de qualquer coisa, é altamente recomendável se aprofundar no manual do bash, pois 
+ele aborda todos os detalhes que tivemos que ter em mente ao fazer este projeto. Minishell 
+envolve análise pesada da string lida pelo readline, portanto é crucial dividir o código 
+do projeto em diferentes partes: o lexer, o expansor, o analisador e por último o executor
+
+-> Lexer e Expander
+
+Esta primeira parte cobre a parte do nosso código responsável por expandir as variáveis de
+ambiente com $ seguido de caracteres, bem como a expansão de ~ para o diretório inicial 
+do usuário. Aqui também dividimos a string de entrada em pequenos pedaços ou tokens para 
+lidar melhor com pipes, redirecionamentos e expansões.
+
+Depois de ler o stdin, usamos uma função chamada cmdtrim que separa a string levando em
+consideração espaços e aspas. Por exemplo:
+
+string: echo "hello      there" how are 'you 'doing? $USER |wc -l >outfile
+output: {echo, "hello      there", how, are, 'you 'doing?, $USER, |wc, -l, >outfile, NULL}
+
+Em seguida, aplicamos as funções expansoras em cima de cada substring da string original, 
+resultando em algo semelhante a isto:
+
+output: {echo, "hello      there", how, are, 'you 'doing?, pixel, |wc, -l, >outfile, NULL}
+Note: if a variable is not found, the $var part of the string will be replaced by an empty 
+string
+
+Por último, temos outra função de divisão chamada cmdsubsplit que separa com <, | ou >, mas
+apenas se esses caracteres estiverem fora das aspas:
+
+output: {echo, "hello      there", how, are, 'you 'doing?, pixel, |, wc, -l, >, outfile, NULL}
+
+-> Parser
+
+O analisador é responsável por armazenar a string tokenizada e salvá-la de maneira útil para 
+o executor usar posteriormente. Nossa estrutura de dados é gerenciada da seguinte forma:
+
+int	g_status;
+
+typedef struct s_prompt
+{
+	t_list	*cmds;
+	char	**envp;
+	pid_t	pid;
+}		t_prompt;
+
+typedef struct s_mini
+{
+	char	**full_cmd;
+	char	*full_path;
+	int	infile;
+	int	outfile;
+}		t_mini;
+
+Aqui está um breve resumo de para que cada variável é usada:
+
+*cmds*
+Lista vinculada contendo um nó t_mini com todos os comandos 
+separados por barras verticais
+
+*full_cmd*
+Equivalente ao argv típico, contendo o nome do comando 
+e seus parâmetros quando necessário
+
+*full_path*
+Se não for um caminho interno, primeiro disponível para 
+o executável indicado por argv[0] da variável PATH
+
+*infile*
+Qual descritor de arquivo ler ao executar um comando
+
+*outfile*
+Em qual descritor de arquivo gravar ao executar um comando
+
+*envp*
+Matriz atualizada contendo chaves e valores para o ambiente shell
+
+*pid*
+ID do processo da instância do minishell
+
+*g_status*
+Status de saída do comando executado mais recentemente
+
+Depois de executar nosso lexer e expansor, temos um array bidimensional.
+Seguindo o exemplo anterior, foi o seguinte:
+
+{echo, "hello      there", how, are, 'you 'doing?, pixel, |, wc, -l, >, outfile, NULL}
+
+Agora, nosso analisador começa a construir a lista vinculada de comandos (t_list *cmds), 
+que é preenchida da seguinte maneira:
+
+    1.Iterar sobre a matriz bidimensional
+    2.Sempre que um redirecionamento for encontrado, verifique o tipo de redirecionamento 
+		e recupere um descritor de arquivo contendo as informações que precisamos como 
+		arquivo de entrada
+    3.Verifique se o descritor de arquivo que foi aberto é válido (!= -1) e continue
+    4.Se um pipe for encontrado, adicione um novo nó à lista de comandos
+    5.Em todos os outros casos, adicione quaisquer palavras encontradas à lista de 
+		argumentos (argv), que chamamos de full_cmd
+
+Veja como ficarão as variáveis de acordo com o exemplo que usamos antes:
+
+cmds:
+	cmd 1:
+		infile: 0 (default)
+		outfile: 1 (redirected to pipe)
+		full_path: NULL (because echo is a builtin)
+		full_cmd: {echo, hello there, how, are, you doing?, pixel, NULL}
+	cmd 2:
+		infile: 0 (contains output of previous command)
+		outfile: 3 (fd corresponding to the open file 'outfile')
+		full_path: /bin/wc
+		full_cmd: {wc, -l, NULL}
+envp: (envp from main)
+pid: process ID of current instance
+g_status: 0 (if last command exits normally)
+
+
+-> Executor
+
+Com todos os nossos dados corretamente em nossas estruturas, o executor possui todas as 
+informações necessárias para executar comandos. Para esta parte, usamos processos separados
+para executar nossos builtins ou outros comandos dentro de processos filhos que 
+redirecionam stdin e stdout da mesma forma que fizemos com nosso projeto pipex anterior. 
+Se recebermos um caminho completo (por exemplo, /bin/ls), não precisamos procurar o caminho 
+completo do comando e podemos executar diretamente com execve. Se recebermos um caminho 
+relativo, usaremos a variável de ambiente PATH para determinar o caminho completo de um 
+comando. Depois que todos os comandos começaram a ser executados, recuperamos o status de 
+saída do comando executado mais recentemente com a ajuda de waitpid
+
+Depois que todos os comandos terminarem de ser executados, a memória alocada será liberada 
+e um novo prompt aparecerá para ler o próximo comando
+
+
+-> Mind Map
+
+ver imagens
+
+-> Global variable
+
+Para este projeto poderíamos usar uma variável global. A princípio parecia que nunca 
+precisaríamos de um, mas depois ficou óbvio que era necessário. Especificamente, tem a ver com
+sinais. Quando você usa sinal para capturar sinais SIGINT (de Ctrl-C) e SIGQUIT (de Ctrl-\),
+temos que alterar o status de erro, e a função de sinal não tem uma maneira óbvia de 
+recuperar o status de saída atualizado que deve mudar quando desses sinais são capturados. 
+Para contornar isso, adicionamos uma variável global g_status que atualiza o status do erro
+quando sinais são detectados.
+
+-> Builtins
+
+Fomos solicitados a implementar alguns recursos básicos com a ajuda de algumas funções. Aqui 
+está uma breve visão geral deles:
+
+Builtin 	  Description 	      Options 	    Parameters    Helpful Functions
+----------------------------------------------------------------------------------
+     	    Prints arguments 
+  echo      separated with a        -n             	✔️ 	          write
+			space followed by
+			   a new line 	       
+----------------------------------------------------------------------------------
+    	    Changes current 
+   cd       working directory,       ❌ 	           ✔️ 	         chdir
+			updating PWD and 
+			   OLDPWD 	
+----------------------------------------------------------------------------------
+	         Prints current 
+   pwd       working directory 	     ❌ 	           ❌ 	      getcwd
+----------------------------------------------------------------------------------
+   env 	    Prints environment 	     ❌ 	           ❌ 	       write
+----------------------------------------------------------------------------------
+        	  Adds/replaces 
+  export       variable in           ❌              ✔️ 	           ❌
+			   environment 	
+----------------------------------------------------------------------------------
+  unset 	  Removes variable 
+              from environment 	     ❌             	✔️          	❌
+
+
+-> Prompt 
+
+Conforme mencionado anteriormente, usamos readline para ler a string que contém os comandos
+shell. Para torná-lo mais interativo, o readline recebe uma string para ser usada como 
+prompt. Ajustamos fortemente sua aparência para ser agradável de usar. O prompt está 
+estruturado da seguinte forma:
+
+$USER@minishell $PWD $
+
+Algumas observações:
+
+    * Se houver algum problema ao recuperar o usuário, ele será substituído por convidado
+    * O PWD é colorido em azul e substitui dinamicamente a variável HOME por ~ quando a 
+		variável é definida. Veja abaixo para mais detalhes
+    * O $ no final é impresso em azul ou vermelho dependendo do status de saída na estrutura
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

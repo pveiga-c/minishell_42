@@ -6,163 +6,72 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 18:23:15 by pveiga-c          #+#    #+#             */
-/*   Updated: 2023/11/09 16:29:49 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/14 15:26:05 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char **start_list(t_prompt *parse, char *p_input)
+void count_tokens(t_prompt *parse, char *p_input)
 {
-	int i;
-	unsigned int j;
-	int n;
-	char **token;
+	size_t i;
 
-	j = 0;
-	n = 0;
-	token = start_memory_list(parse, p_input);
-	while(n < parse->n_tokens)
+	i = -1;
+	while(++i < ft_strlen(p_input))
 	{
-		i = 0;
-		while(p_input[j] == ' ')
-			j++;
-		if(p_input[j] != '<' && p_input[j] != '>' && p_input[j] != '|')
-		{
-			while(j < ft_strlen(p_input) && (p_input[j] != '<' && p_input[j] != '>' && p_input[j] != '|'))
-				token[n][i++] = p_input[j++];	
-		}
-		else if(p_input[j] == '<' || p_input[j] == '>' || p_input[j] == '|')
-		{
-			if(p_input[j] == '<' && p_input[j + 1] != '<')
-				token[n][i++] = p_input[j++];
-			else if (p_input[j] == '<' && p_input[j + 1] == '<')
-			{
-				token[n][i++] = p_input[j++];
-				token[n][i++] = p_input[j++];
-			}
-			if(p_input[j] == '>' && p_input[j + 1] != '>')
-				token[n][i++] = p_input[j++];
-			else if (p_input[j] == '>' && p_input[j + 1] == '>')
-			{
-				token[n][i++] = p_input[j++];
-				token[n][i++] = p_input[j++];
-			}
-			if(p_input[j] == '|' && p_input[j + 1] != '|')
-				token[n][i++] = p_input[j++];
-			else if (p_input[j] == '|' && p_input[j + 1] == '|')
-			{
-				token[n][i++] = p_input[j++];
-				token[n][i++] = p_input[j++];
-			}
-		}
-		token[n][i] = '\0';
-		n++;
+		if(p_input[i] == '|')
+			parse->n_pipes++;
 	}
-	return (token);
+	parse->n_tokens = parse->n_pipes + 1;
+	//printf("pipes = %d\n", parse->n_pipes);
+	//printf("tokens = %d\n", parse->n_tokens);
 }
-
-char **start_memory_list(t_prompt *parse, char *p_input)
+void split_content(t_listm *node, char *content)
 {
 	int i;
+	int op;
 	int j;
-	int n;
-	char **token;
 
-	j = 0;
-	n = 0;
-	token = malloc(sizeof(char **) * parse->n_tokens);
-	while(n < parse->n_tokens)
+	i = 0;
+	op = 0;
+	while(content[i] && (content[i] != '<' && content[i] != '>'))
+			i++;
+	if( content[i] == '>')
+		op = 1;
+	node->cmd = malloc(sizeof(char *) * i + 1);
+	if(!node->cmd)
+		perror("Malloc Error\n");
+	while(content[i])
+		i++;
+	if(op == 0)
+		node->in_redir = malloc(sizeof(char *) * i + 1);
+	else
+		node->out_redir = malloc(sizeof(char *) * i + 1);
+	if(!node->in_redir && !node->out_redir)
+		perror("Malloc Error\n");
+	i = 0;
+	while(content[i] != '<' && content[i] != '>')
 	{
-		i = 0;
-		while(p_input[j] == ' ')
-			j++;
-		if(p_input[j] != ' ' && p_input[j] != '<' && p_input[j] != '>' && p_input[j] != '|')
-		{
-			while(p_input[j] != '<' && p_input[j] != '>' && p_input[j] != '|')
-			{
-				i++;
-				j++;
-			}
-		}
-		else if(p_input[j] == '<' && p_input[j] == '>' && p_input[j] == '|')
-		{
-			if(p_input[j] == '<' && p_input[j + 1] != '<')
-				i = 1;
-			else if (p_input[j] == '<' && p_input[j + 1] == '<')
-			{	
-				i = 2;
-				j++;
-			}
-			if(p_input[j] == '>' && p_input[j + 1] != '>')
-				i = 1;
-			else if (p_input[j] == '>' && p_input[j + 1] == '>')
-			{	
-				i = 2;
-				j++;
-			}
-			if(p_input[j] == '|' && p_input[j + 1] != '|')
-				i = 1;
-			else if (p_input[j] == '|' && p_input[j + 1] == '|')
-			{	
-				i = 2;
-				j++;
-			}
-			j++;
-		}
-		token[n] = (char *)malloc(sizeof(char *) * i + 1);
-		n++;
+		node->cmd[i] = content[i];
+		i++;	
 	}
-	return (token);
-}
-
-void	count_tokens(t_prompt *parse, char *p_input)
-{
-	int i;
-	
-	i = ft_strlen(p_input) - 1;
-	while(i > 0)
+	node->cmd[i] = '\0';
+	j = -1;
+	if(op == 0)
 	{
-		if(p_input[i] != ' ' && p_input[i] != '<' && p_input[i] != '>' && p_input[i] != '|' /*&& p_input[i] != '&'*/)
-		{
-			parse->n_tokens++;
-			while(i > 0 && (p_input[i] != '<' && p_input[i] != '>' && p_input[i] != '|' /*&& p_input[i] != '&'*/))
-				i--;
-		}
-		if(p_input[i] == ' ')
-			i--;
-		else if(p_input[i] == '|' || p_input[i] == '>' || p_input[i] == '<')
-			i = check_operators(parse, p_input, i);
-		else
-			i--;
+		while(content[++i])
+			node->in_redir[++j] = content[i];
+		node->in_redir[j] = '\0';
 	}
-}
-
-int	check_operators(t_prompt *parse, char *p_input, int i)
-{
-	if(p_input[i] == '|')
+	if(op == 1)
 	{
-		parse->n_tokens++;
-		if(p_input[i - 1] != '|')
-			return (i - 1);
-		else if(p_input[i - 1] == '|')
-			return (i - 2);
+		while(content[++i])
+			node->out_redir[++j]= content[i];
+		node->out_redir[j] = '\0';
 	}
-	else if(p_input[i] == '>')
-	{
-		parse->n_tokens++;
-		if(p_input[i - 1] != '>')
-			return (i - 1);
-		else if(p_input[i - 1] == '>')
-			return (i - 2);
-	}
-	else if(p_input[i] == '<')
-	{
-		parse->n_tokens++;
-		if(p_input[i - 1] != '<')
-			return (i - 1);
-		else if(p_input[i - 1] == '<')
-			return (i - 2);
-	}
-	return (0);	
+	// printf("pipe_line = %d\n", node->pipe_line);
+	// printf("content = %s\n", content);
+	// printf("cmd = %s\n", node->cmd);
+	// printf("in = %s\n", node->in_redir);
+	// printf("out = %s\n\n", node->out_redir);
 }

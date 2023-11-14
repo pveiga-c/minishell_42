@@ -6,7 +6,7 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/13 15:51:35 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/14 15:25:26 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char **argv, char **env)
 	rl_catch_signals = 0;
 	//prompt = readline("$ ");
 	//add_history(prompt);
-	start_parse_2(&parse ,prompt);
+	start_parse(&parse ,prompt);
 }
 
 void	init_param(t_prompt *parse)

@@ -1,35 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   MiniShell.c                                        :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/01 14:50:30 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/15 15:28:42 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// struct s_global	g_data;
-
 int	main(int argc, char **argv, char **env)
 {
-	(void)argv;
-	if (argc != 1)
-		return (1);
-	(void)env;
-//	desativa a captura de sinais pelo readline 
-	rl_catch_signals = 0;
+	char *prompt;
 	
-//	g_data.env = get_env(env);
-//	g_data.status = 0;
-//	g_data.hd = 0;
-//	g_data.vars = init_vars();
-//	rl_catch_signals = 0;
-//	signals_default();
-//	prompt();
+	//prompt = argv[1];
+	
+	(void)argc;
+	(void)argv;
+	(void)env;
+	while(1)
+	{
+		prompt = readline("$ ");
+		start_new(prompt);
+	}
+	// rl_catch_signals = 0;
+	// init_param(&parse);
+	// prompt = argv[1];
+	// //add_history(prompt);
+	// start_parse(&parse ,prompt);
+}
+
+void	init_param(t_prompt *parse)
+{
+	t_listm *tokens;
+
+	tokens = ft_calloc(1, sizeof(t_listm));
+	
+	parse->n_tokens = 0;
+	parse->n_pipes = 0;
+	parse->n_in_redir = 0;
+	parse->n_out_redir = 0;
+	tokens->content = NULL;
+	tokens->id = 0; 
 }
 /*
 int main()

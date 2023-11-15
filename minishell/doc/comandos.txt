@@ -1,0 +1,71 @@
+-> Mostrar um prompt ao aguardar um novo comando.
+-> Tenha um histórico de trabalho.
+-> Pesquise e inicie o executável correto (com base na variável PATH 
+ou usando o caminho relativo ou absoluto).
+-> Implemente os recursos internos:
+◦ eco
+◦ CD
+◦ senha
+◦ exportar
+◦ não definido
+◦ ambiente
+◦ sair
+-> ’ inibe toda interpretação de uma sequência de caracteres.
+-> “ inibe toda interpretação de uma sequência de caracteres, exceto $.
+-> Redirecionamentos:
+◦ < deve redirecionar a entrada.
+◦ > deve redirecionar a saída.
+◦ << lê a entrada da fonte atual até que uma linha contendo apenas o 
+delimitador seja vista.
+◦ >> deve redirecionar a saída com modo de acréscimo.
+-> Pipes | A saída de cada comando no pipeline é conectada por meio de um
+pipe à entrada do próximo comando.
+-> Ponto e vírgula (semicolons) ; na linha de comando deve separar os comandos.
+-> Variáveis de ambiente ($ seguidas de caracteres) devem expandir para 
+seus valores.
+-> $? deve expandir para o status de saída do pipeline de primeiro plano 
+executado mais recentemente.
+-> ctrl-C ctrl-D ctrl-\ deve funcionar como no bash.
+
+/* Example For the line : cat < "Makefile" | grep something > outfile | wc -l < outfile */
+
+/---------------------------------------------------\
+| PIPE_LINE|  CMD|      ARGS|   IN_REDIR|  OUT_REDIR|
+|---------------------------------------------------|
+|        00|  cat|      NULL| "Makefile"|       NULL|
+|        01| grep| something|       NULL|    outfile|
+|        02|   wc|        -l|    outfile|       NULL|
+\---------------------------------------------------/
+
+A primeira coisa que acontece é que é feita uma chamada à função command(), que, como veremos 
+mais tarde, sabe extrair da linha de comando as palavras associadas a um único comando simples. 
+Essas palavras serão copiadas para o array avline[] como strings separadas e os ponteiros av[] no 
+cmd da estrutura apropriada serão configurados para apontar para essas strings. O parâmetro 
+passado para a função command() é usado para informar qual estrutura cmd no array cmdlin[] usar.
+
+Após a análise do primeiro comando, a próxima seção procura o operador opcional de redirecionamento 
+de entrada usando a função check(). Se check() encontrar uma correspondência para sua string de 
+parâmetro na posição atual no array line[], ele retornará um valor verdadeiro e a função getname() 
+será então chamada para extrair o seguinte nome de arquivo no array infile[].
+
+O comando simples zero já foi analisado, portanto a próxima seção de código procura os operadores 
+de pipe opcionais seguidos pelos comandos simples um, dois e assim por diante. Dentro do loop for,
+se um operador de pipe for encontrado, a função command() será chamada novamente para analisar o 
+próximo comando simples. O parâmetro para command() é fornecido desta vez pela variável de controle 
+do loop for (i). O loop for se repete até que nenhum operador de pipe seja encontrado ou até que o 
+limite do 'número máximo de comandos simples em um pipeline' seja atingido.
+
+Esta seção verifica o operador de redirecionamento de saída e, em seguida, verifica se este é ou 
+não um redirecionamento de saída anexado, procurando o segundo símbolo >. Se for um redirecionamento de 
+saída de acréscimo, o sinalizador de acréscimo será definido como TRUE (de seu padrão FALSE configurado
+em initwarm()). Se algum dos operadores de redirecionamento de saída estiver presente, a função getname()
+será usada para copiar o nome do arquivo associado no array outfile[].
+
+A especificação agora permite um operador & opcional, e isso é verificado a seguir. Se o operador estiver 
+presente, o sinalizador backgnd será definido como TRUE (o valor FALSE foi definido em initwarm()).
+
+Qualquer que seja o caminho percorrido no código anterior, a linha de entrada agora deve ter sido 
+analisada até a conclusão e tudo o que deve permanecer é o caractere de nova linha (\n) no final. 
+Se for assim, então parse retorna o valor da variável i que fornece o número de comandos simples 
+encontrados nesta linha de comando. Se uma nova linha não for o próximo caractere, uma mensagem de 
+erro será exibida e o valor ERROR será retornado de parse().

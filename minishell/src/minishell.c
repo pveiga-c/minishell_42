@@ -6,7 +6,7 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:34 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/14 15:25:26 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/15 15:28:42 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,22 @@
 int	main(int argc, char **argv, char **env)
 {
 	char *prompt;
-	t_prompt parse;
 	
-	init_param(&parse);
-	prompt = argv[1];
+	//prompt = argv[1];
+	
 	(void)argc;
+	(void)argv;
 	(void)env;
-	rl_catch_signals = 0;
-	//prompt = readline("$ ");
-	//add_history(prompt);
-	start_parse(&parse ,prompt);
+	while(1)
+	{
+		prompt = readline("$ ");
+		start_new(prompt);
+	}
+	// rl_catch_signals = 0;
+	// init_param(&parse);
+	// prompt = argv[1];
+	// //add_history(prompt);
+	// start_parse(&parse ,prompt);
 }
 
 void	init_param(t_prompt *parse)

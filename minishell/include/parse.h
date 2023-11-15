@@ -6,7 +6,7 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 14:05:24 by pveiga-c          #+#    #+#             */
-/*   Updated: 2023/11/14 15:24:52 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/15 17:39:30 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ struct s_prompt
 	t_listm	*tokens; 
 }	;
 
+
+
 void		init_param(t_prompt *parse);
 void		print_lst(t_listm *list);
 
@@ -48,5 +50,35 @@ t_listm 	*update_list(t_prompt *parse, char **token);
 char 		**start_memory_list(t_prompt *parse, char *p_input);
 void		lst_add_back(t_prompt *parse, t_listm **lst, char *new, int i);
 void 		split_content(t_listm *node, char *content);
+
+//////////////////////////////////////////////////////////////////////////
+typedef struct s_mini t_mini;
+
+typedef struct s_prompt2
+{
+	t_list	*cmds;
+	char	**envp;
+	pid_t	pid;
+	t_mini	*mini;
+	int		s_quote;
+	int 	d_quote;
+	char	**full_cmd;
+}		t_prompt2;
+
+struct s_mini
+{
+	char	**full_cmd;
+	char	*full_path;
+	int		infile;
+	int		outfile;
+}		;
+
+void start_new(char *p_input);
+void init_data(t_prompt2 *parse, t_mini *mini);
+void count_quote(t_prompt2 *parse, char *p_input);
+void split_prompt(t_prompt2 *parse, char *p_input);
+static size_t	count_words(const char *s, char c);
+static char	*next_word(const char **s, char c);
+
 
 #endif

@@ -6,99 +6,112 @@
 /*   By: pveiga-c <pveiga-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 14:03:23 by pveiga-c          #+#    #+#             */
-/*   Updated: 2023/11/15 18:20:29 by pveiga-c         ###   ########.fr       */
+/*   Updated: 2023/11/16 18:51:35 by pveiga-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void start_parse(t_prompt *parse, char *p_input)
-{
-	char **token;
-	t_listm *list;
+// void start_parse(t_prompt *parse, char *p_input)
+// {
+// 	char **token;
+// 	t_listm *list;
 
-	count_tokens(parse, p_input);
-	token = start_list(parse, p_input);
-	list = update_list(parse, token);	
-	print_lst(list);
-}
+// 	count_tokens(parse, p_input);
+// 	token = start_list(parse, p_input);
+// 	list = update_list(parse, token);	
+// 	print_lst(list);
+// }
 
 void start_new(char *p_input)
 {
 	t_prompt2 parse;
 	t_mini	mini;
+	char **prompt_arr;
+	//int i = 0;
 	
 	init_data(&parse, &mini);
 	count_quote(&parse, p_input);
-	split_prompt(&parse, p_input);
+	prompt_arr = split_prompt(&parse, p_input);
+	// while(prompt_arr && prompt_arr[i])
+	// {
+	// 	printf("%s\n", prompt_arr[i]);
+	// 	i++;
+	// }
 	
 	
 }
 
-void split_prompt(t_prompt2 *parse, char *p_input)
+char **split_prompt(t_prompt2 *parse, char *p_input)
 {
 	int		i;
+	int		j;
+	int 	n;
 	int		n_words;
 	const char	*p;
 	char **words;
-	(void)parse;
 	
+	i = -1;
+	n = 0;
 	p = p_input;
-	n_words = count_words(p_input, ' ');
+	n_words = count_words(parse, p_input, ' ');
 	words = (char **)malloc(sizeof(char *) * (n_words + 1));
 	if (!p_input || !words)
-		return ;
-	i = 0;
-	while (i < n_words)
+		return (NULL);
+	while(++i < n_words)
 	{
-		words[i] = next_word(&p, ' ');
-		if (!words[i])
-		{
-			while (i--)
-				free(words[i]);
-			free(words);
-			return ;
-		}
-		i++;
-	}
-	words[i] = NULL;
-	i = 0;
-	while(words[i])
-	{
-		printf("%s\n", words[i]);
-		i++;
-	}
+		words[i] = input_split(parse, p_input);
+ 	}
+		
 }
-static size_t	count_words(const char *s, char c)
+
+char *input_split(t_prompt2 *parse, char *p_input)
+{
+	char *word;
+
+	
+}
+
+size_t	count_words(t_prompt2 *parse, const char *s, char c)
 {
 	int i;
     int n_word;
+	(void)c;
 
     i = 0;
     n_word = 0;
     while (s[i])
     {
-        if (s[i] == '\"')
+        if (s[i] == '\"' && parse->d_quote != 0)
         {
            i++;
             while (s[i] != '\"')
                 i++;
             if (s[i] != '\0')
                 n_word++;
+			parse->d_quote -= 2;
         }
-        else
+		else if (s[i] == '\'' && parse->s_quote != 0)
         {
-             while (s[i] && s[i] != c)
+           i++;
+            while (s[i] != '\'')
                 i++;
             if (s[i] != '\0')
                 n_word++;
+			parse->s_quote -= 2;
+        }
+        else
+        {
+             while (s[i] && s[i] != ' ' && s[i] != '\'' && s[i] != '\"')
+                i++;
+            n_word++;
         }
 		i++;
     }
-    return n_word;
+    return (n_word);
 }
 
-static char	*next_word(const char **s, char c)
+char	*next_word(const char **s, char c)
 {
 	const char	*start;
 	char		*word;
@@ -131,6 +144,11 @@ void count_quote(t_prompt2 *parse, char *p_input)
 		if(p_input[i] == '\'')
 			parse->s_quote++;	
 		i++;
+	}
+	if(parse->d_quote % 2 != 0 || parse->s_quote % 2 != 0)
+	{
+		printf("dquote>\n");
+		exit (1);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 14:37:59 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/09 12:28:56 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/20 15:52:52 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	str_is_num(const char *str)
 
 
 // Verifica se o exit code ultrapassa long long int
-int	isoverflow(t_commands **lst)
+int	is_overflow(t_commands **lst)
 {
 	int	i;
 
@@ -87,7 +87,7 @@ void	execute_exit(t_commands **command)
 {
 	int	number;
 
-	if ((*command)->content[2])
+	if ((*command)->content[1] && (*command)->content[2])
 	{
 		g_data.exit_status = 1;
 		write(2, "exit\n", 5);
@@ -95,7 +95,7 @@ void	execute_exit(t_commands **command)
 		// PFV
 		stderr_null();
 	}
-	else if (isoverflow(command))
+	else if (is_overflow(command))
 		g_data.exit_status = 2;
 	else if ((*command)->content[1] && str_is_num((*command)->content[1]) == 0)
 		must_be_numeric(command);

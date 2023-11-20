@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:29:15 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/09 17:03:59 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/20 11:42:54 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,22 +89,22 @@ void	export_only(void)
 
 void	execute_export(t_commands **command)
 {
-//	char	**str;
+	char	**var;
 	int		i;
-
+	// verifica se so existe uma variavel a exportar [0] ou seja se [1] e nulo
 	if (!(*command)->content[1])
 		export_only();
 	i = 1;
-/*
+
 	while ((*command)->content[i])
 	{
-		str = ft_split((*command)->content[i], '=');
-		if ((*command)->content[i][0] == '=' || (str && !ft_str_islanum(str[0])) \
+		var = ft_split((*command)->content[i], '=');
+		if ((*command)->content[i][0] == '=' || (var && !str_is_alphanum(var[0])) \
 		|| ft_isdigit((*command)->content[i][0]))
-			export_error(command, str, i);
+			export_error(command, var, i);
 		else
-			core_export(command, str, i);
+			core_export(command, var, i);
 		i++;
 	}
-*/	
+
 }

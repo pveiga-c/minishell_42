@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 15:35:04 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/09 16:53:19 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/20 17:05:56 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ int	main(int argc, char **argv, char **env)
 
 	// Cria um novo elemento t_commands
 	t_commands *novo_comando = (t_commands *)malloc(sizeof(t_commands));
-	novo_comando->content = (char *[]){"export", NULL};
-	novo_comando->path = "/bin/sleep";
-	novo_comando->fd_master[0] = 2;
-	novo_comando->fd_master[1] = 3;
-	novo_comando->fd[0] = 0;
-	novo_comando->fd[1] = 1;
+	novo_comando->content = (char *[]){"clear", NULL};
+	novo_comando->path = "";
+	novo_comando->fd_master[0] = 0;
+	novo_comando->fd_master[1] = 1;
+	novo_comando->fd[0] = 3;
+	novo_comando->fd[1] = 4;
 	novo_comando->fd_master_error[0] = 0;
 	novo_comando->fd_master_error[1] = 0;
 	novo_comando->next = NULL;
@@ -71,9 +71,12 @@ int	main(int argc, char **argv, char **env)
 
 void	executor(t_commands *command)
 {
+	int		status;
+	pid_t	proc_id;
+
 	execution(command);
-/*
-	go_head(&command);
+
+	lst_first(&command);
 	while (command)
 	{
 		if (command->content[0])
@@ -86,9 +89,12 @@ void	executor(t_commands *command)
 			break ;
 		command = command->next;
 	}
+//	PFV
+/*	
 	if (check_fds(command))
 		g_data.exit_status = 1;
 */
+//	free_list(&command);
 }
 
 void	execution(t_commands *command)
@@ -121,14 +127,15 @@ void	execution(t_commands *command)
 	}
 }
 
-/* Define a funcao de a executar para cada node */
+// Define a funcao a executar para cada node 
+// E executada atraves da instrucao "command->ft_exec(&command);"
 void	choose_execution(t_commands *command)
 {
 	if (!ft_strncmp(command->content[0], "pwd", 3))
 		command->ft_exec = execute_pwd;
 	else if (!ft_strncmp(command->content[0], "cd", 2))
-//		command->ft_exec = execute_cd;
-		printf("executar CD\n\n");
+		command->ft_exec = execute_cd;
+//		printf("executar CD\n\n");
 	else if (!ft_strncmp(command->content[0], "echo", 4))
 		command->ft_exec = execute_echo;
 	else if (!ft_strncmp(command->content[0], "env", 3))
@@ -142,8 +149,8 @@ void	choose_execution(t_commands *command)
 		command->ft_exec = execute_unset;
 //		printf("executar UNSET\n\n");
 	else
-//		command->ft_exec = execute_default;
-		printf("executar DEFAULT\n\n");
+		command->ft_exec = execute_default;
+//		printf("executar DEFAULT\n\n");
 }
 
 void	command_execution(t_commands *command)
@@ -156,4 +163,21 @@ void	command_execution(t_commands *command)
 			exit(g_data.exit_status);
 		return ;
 	}
+	if (fork() == 0)
+	{
+		if (command->prev && command->fd_master[0] < 3)
+			dup2(command->fd[0], 0);
+		else if (command->fd_master[0] > 2)
+			dup2(command->fd_master[0], 0);
+		if (command->next && command->fd_master[1] < 3)
+			dup2(command->next->fd[1], 1);
+		else if (command->fd_master[1] > 2)
+			dup2(command->fd_master[1], 1);
+		command->ft_exec(&command);
+		free_env(&g_data.env);
+		free_vars();
+		close(0);
+		exit(g_data.exit_status);
+	}
+	close_fds(&command, 0);
 }

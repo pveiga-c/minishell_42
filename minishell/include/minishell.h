@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:21 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/13 14:17:43 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/20 16:35:49 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #include <readline/readline.h>
 #include <limits.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <sys/wait.h>
 
 #include "../libft/libft.h"
 #include "built_in.h"
@@ -109,5 +111,10 @@ void		execute_unset(t_commands **command);
 t_env		*env_search(char *input_var);
 void		execute_cd(t_commands **lst);
 int			ft_strcmp(char *s1, char *s2);
-
+int			str_is_alphanum(char *str);
+void		execute_default(t_commands **command);
+void		close_fds(t_commands **command, int flag);
+void		error_handle(char *cmd);
+void		is_a_directory(char *cmd);
+void		command_not_found(char *cmd);
 #endif

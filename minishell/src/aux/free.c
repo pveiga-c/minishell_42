@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 16:29:07 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/09 15:34:22 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/20 12:21:50 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ void	free_str_array(char ***str_array)
 
 	i = 0;
 	while (str_array && str_array[0] && str_array[0][i])
-		free(str_array[0][i++]);
+	{
+		free(str_array[0][i]);
+		i++;
+	}
 	if (str_array)
 	{
 		free(str_array[0]);

@@ -6,7 +6,7 @@
 #    By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/01 12:00:51 by pviegas           #+#    #+#              #
-#    Updated: 2023/11/13 14:02:17 by pviegas          ###   ########.fr        #
+#    Updated: 2023/11/20 13:53:33 by pviegas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,8 @@ SRC_DIR 			= src/
 SRC_FILES			= 	executor.c \
 						path.c \
 						built_in.c \
+						execute_default.c \
+						errors.c \
 						aux/free.c \
 						aux/env_utils1.c \
 						aux/env_utils2.c \

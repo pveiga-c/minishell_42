@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:55:55 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/13 14:19:42 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/20 12:31:41 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@ int	update_pwd_oldpwd(char *str)
 		temp_env = env_search(str);
 		if (temp_env)
 		{
-			free(temp_env->data);
+			if (temp_env->data)
+				free(temp_env->data);
 			temp_char = ft_strdup(buf);
 			temp_char_2 = ft_strjoin(str, "=");
 			temp_env->data = ft_strjoin(temp_char_2, temp_char);
 			free(temp_char_2);
 			free(temp_char);
+			return (0);
 		}
 	}
 	return (1);
@@ -59,9 +61,10 @@ int	change_dir(char *path)
 	return (1);
 }
 
-void	finish_cd(char **env_char)
+//void	finish_cd(char **env_char)
+void	finish_cd(void)
 {
-	free_str_array(&env_char);
+//	free_str_array(&env_char);
 	g_data.exit_status = 0;
 	return ;
 }
@@ -83,11 +86,15 @@ void	execute_cd(t_commands **command)
 	env_char = lst_to_arr(g_data.env);
 	path_home = env_search_str(env_char, "HOME");
 	if (!(*command)->content[1] && change_dir(path_home))
-		return (finish_cd(env_char));
+//		PFV	
+//		return (finish_cd(env_char));
+		return (finish_cd());
 	else
 	{
 		if (!ft_strcmp((*command)->content[1], "--") && change_dir(path_home))
-			return (finish_cd(env_char));
+//		PFV
+//			return (finish_cd(env_char));
+			return (finish_cd());
 		change_dir((*command)->content[1]);
 	}
 	free_str_array(&env_char);

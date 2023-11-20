@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:43:55 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/13 14:17:26 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/20 13:51:23 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	str_cmp(char *s1, char *s2)
 	return (1);
 }
 
-/* Calcula o size de uma variavel do tipo char** */
+// Calcula o size de uma variavel do tipo char**
 int	strlen_array(char **array)
 {
 	int	i;
@@ -91,7 +91,7 @@ int	strlen_array(char **array)
 	return (i);
 }
 
-/* Compara dois elementos ate um deles acabar */
+// Compara dois elementos ate um deles acabar
 int	ft_strcmp(char *s1, char *s2)
 {
 	unsigned int	i;
@@ -104,4 +104,44 @@ int	ft_strcmp(char *s1, char *s2)
 		return (s1[i] - s2[i]);
 	}
 	return (1);
+}
+
+// Verifica se a string so tem elementos alfabumericos
+int	str_is_alphanum(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (!(str[i] >= '0' && str[i] <= '9') || 
+			!(str[i] >= 'a' && str[i] <= 'z') || 
+			!(str[i] >= 'A' && str[i] <= 'Z'))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+// Fecha os file descriptors
+void	close_fds(t_commands **command, int flag)
+{
+	t_commands	*temp;
+
+	temp = (*command);
+	if (flag)
+		lst_first(command);
+	while ((*command))
+	{
+		close((*command)->fd[0]);
+		close((*command)->fd[1]);
+		if ((*command)->fd_master[1] > 2)
+			close((*command)->fd_master[1]);
+		if ((*command)->fd_master[0] > 2)
+			close((*command)->fd_master[0]);
+		if (!flag)
+			break ;
+		(*command) = (*command)->next;
+	}
+	(*command) = temp;
 }

@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:49:21 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/20 16:35:49 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/21 11:33:59 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,6 @@ void		close_fds(t_commands **command, int flag);
 void		error_handle(char *cmd);
 void		is_a_directory(char *cmd);
 void		command_not_found(char *cmd);
+int			check_fds(t_commands *command);
+
 #endif

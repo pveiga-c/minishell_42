@@ -6,7 +6,7 @@
 /*   By: pviegas <pviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:43:55 by pviegas           #+#    #+#             */
-/*   Updated: 2023/11/20 13:51:23 by pviegas          ###   ########.fr       */
+/*   Updated: 2023/11/21 11:33:08 by pviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,4 +144,19 @@ void	close_fds(t_commands **command, int flag)
 		(*command) = (*command)->next;
 	}
 	(*command) = temp;
+}
+
+int	check_fds(t_commands *command)
+{
+	int	res;
+
+	res = 0;
+	while (command)
+	{
+		if (command->fd_master[0] == -1 || command->fd_master[1] == -1 \
+			|| command->fd_master_error[0] || command->fd_master_error[1])
+			res++;
+		command = command->next;
+	}
+	return (res);
 }
